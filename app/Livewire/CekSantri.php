@@ -3,12 +3,14 @@
 namespace App\Livewire;
 
 use App\Models\Santri;
+use App\Models\StatusSantri;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -29,11 +31,11 @@ class CekSantri extends Component implements HasForms, HasTable
         $ceknism = Santri::where('nism', $this->ceknism)->whereHas('statussantri', function ($query) {
             $query->where('stat_santri_id', 3);
         })
-        ->count();
+            ->count();
 
         if ($ceknism == 0) {
             throw ValidationException::withMessages([
-                'ceknism' => trans('auth.failed'),
+                'ceknism' => trans('auth.nismtidakditemukan'),
             ]);
         }
     }
@@ -44,6 +46,39 @@ class CekSantri extends Component implements HasForms, HasTable
             ->query(Santri::where('nism', $this->ceknism))
             ->columns([
                 Stack::make([
+
+                    TextColumn::make('status')
+                        ->label('Status')
+                        ->grow(false)
+                        ->description(fn($record): string => "Status:", position: 'above')
+                        ->html()
+                        ->default(function ($record) {
+                            $getstatussantri = StatusSantri::where('id', $record->id)->first();
+
+                            if ($getstatussantri?->stat_santri_id == 3) {
+                                return 'Aktif';
+                            } elseif ($getstatussantri?->stat_santri_id != 3) {
+                                return 'Tidak Aktif';
+                            }
+                        })
+                        ->color(function ($record) {
+                            $getstatussantri = StatusSantri::where('id', $record->id)->first();
+
+                            if ($getstatussantri?->stat_santri_id == 3) {
+                                return 'tsn-bg-header';
+                            } elseif ($getstatussantri?->stat_santri_id != 3) {
+                                return 'tsn-bg-accent';
+                            }
+                        })
+                        ->icon(function ($record) {
+                            $getstatussantri = StatusSantri::where('id', $record->id)->first();
+
+                            if ($getstatussantri?->stat_santri_id == 3) {
+                                return 'heroicon-o-check-circle';
+                            } elseif ($getstatussantri?->stat_santri_id != 3) {
+                                return 'heroicon-o-x-circle';
+                            }
+                        }),
 
                     TextColumn::make('nism')
                         ->label('NISM')
@@ -61,9 +96,10 @@ class CekSantri extends Component implements HasForms, HasTable
             ])
             ->actions([])
             ->paginated(false)
+            ->emptyStateIcon('heroicon-o-arrow-up')
             ->emptyStateHeading('Klik Tombol CEK');
     }
-    
+
     public function render()
     {
 

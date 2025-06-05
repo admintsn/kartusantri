@@ -44,13 +44,15 @@
 
 <body class="font-raleway antialiased bg-tsn-bg no-scrollbar h-screen">
     {{-- header --}}
-    <div class="flex sticky top-0 h-24 z-50 bg-tsn-header border-b-4 border-tsn-accent justify-between">
-        <div class="w-fit px-2 mt-4 me-4">
+    <div class="flex sticky top-0 h-24 z-50 bg-tsn-header border-b-4 border-tsn-accent justify-center">
+        <div class="w-fit mt-4 me-4">
+            {{-- <figure><img src="\LogoTSN.png" alt="Album" class="w-16" /></figure> --}}
+        </div>
+        <div class="w-fit mt-4 me-4">
             <a href="https://tsn.ponpes.id/">
                 <figure><img src="\LogoTSN.png" alt="Album" class="w-16" /></figure>
             </a>
         </div>
-        <div class="w-fit"></div>
         <div class="w-fit mt-4 me-4">
             {{-- <figure><img src="\LogoTSN.png" alt="Album" class="w-16" /></figure> --}}
         </div>
